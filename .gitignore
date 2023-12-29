@@ -2,7 +2,8 @@
 #Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
 .vscode/
-.sql-avanzando/
+jugos_ventas_tabla_de_vendedores.sql
+# sql-avanzando/
 #Cache folder
 .alcache/
 #Symbols folder
