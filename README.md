@@ -219,3 +219,23 @@ Lo que aprendimos en esta aula:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-3 "Descargue los archivos en Github") o haga clic ![](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-3.zip) para descargarlos directamente.
+
+### Barrios de Ciudad de México
+
+¿Cuáles son los barrios en Ciudad de México que tienen clientes?
+
+Son 10. La consulta que debemos realizar es la siguiente:
+
+```sql
+SELECT DISTINCT BARRIO FROM tabla_de_clientes WHERE CIUDAD = 'Ciudad de México';
+```
+
+### Observando una muestra de datos
+
+Queremos obtener las 10 primeras ventas del día 01/01/2017. ¿Cuál sería el comando SQL para obtener este resultado?
+
+La consulta que debemos realizar es la siguiente:
+
+```sql
+SELECT * FROM facturas  WHERE FECHA_VENTA = '2017-01-01' LIMIT 10;
+```
