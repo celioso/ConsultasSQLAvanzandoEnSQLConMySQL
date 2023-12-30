@@ -239,3 +239,338 @@ La consulta que debemos realizar es la siguiente:
 ```sql
 SELECT * FROM facturas  WHERE FECHA_VENTA = '2017-01-01' LIMIT 10;
 ```
+
+### Mayores ventas
+
+¿Cuál (o cuáles) fue (fueron) la(s) mayor(es) venta(s) del producto “Refrescante, 1 Litro, Frutilla/Limón”, en cantidad? (Obtenga este resultado utilizando 2 comandos SQL).
+
+Las consultas que debemos realizar son las siguientes:
+
+```sql
+SELECT CODIGO_DEL_PRODUCTO FROM tabla_de_productos 
+WHERE NOMBRE_DEL_PRODUCTO = "Refrescante" AND TAMANO = "1 Litro" 
+AND SABOR = "Frutilla/Limón"; 
+```
+
+Ahora, con el código del producto que es: 1101035, podemos consultar la cantidad:
+
+```sql
+SELECT * FROM items_facturas WHERE CODIGO_DEL_PRODUCTO = "1101035" ORDER BY CANTIDAD DESC;
+```
+
+Notaremos que la cantidad máxima vendida es de 99.
+
+### Número de ventas
+
+Aprovechando el ejercicio del video anterior ¿Cuántos ítems vendidos cuentan con la mayor cantidad del producto '1101035'?
+
+Las consultas que debemos realizar son las siguientes:
+
+```SQL
+SELECT MAX(CANTIDAD) AS CANTIDAD_MAXIMA FROM items_facturas WHERE CODIGO_DEL_PRODUCTO = "1101035";
+```
+Notaremos que la cantidad máxima vendida es de 99. Así, podemos entonces ejecutar el siguiente comando:
+
+```SQL
+SELECT COUNT(*) FROM items_facturas WHERE CODIGO_DEL_PRODUCTO = "1101035" AND CANTIDAD = 99;
+```
+
+Notaremos que la cantidad de ítems vendida es de 79
+
+### Clientes que realizaron compras en 2016
+
+¿Quiénes fueron los clientes que realizaron más de 2000 compras en 2016?
+
+La consulta que debemos realizar es la siguiente:
+
+```sql
+SELECT DNI, COUNT(*) FROM facturas
+WHERE YEAR(FECHA_VENTA) = 2016
+GROUP BY DNI
+HAVING COUNT(*) > 2000;
+```
+
+Nos devolverá 3 clientes.
+
+### Clasificando el número de ventas
+
+Registre el año de nacimiento de los clientes y clasifíquelos de la siguiente manera:
+
+Nacidos antes de 1990= Viejos, nacidos entre 1990 y 1995= Jóvenes y nacidos después de 1995= Niños. Liste el nombre del cliente y esta clasificación.
+
+El comando que debemos ejecutar es el siguiente:
+
+```sql
+SELECT NOMBRE,
+CASE 
+    WHEN YEAR(fecha_de_nacimiento) < 1990 THEN 'Viejos'
+    WHEN YEAR(fecha_de_nacimiento) >= 1990 
+    AND YEAR(fecha_de_nacimiento) <= 1995 THEN 'Jóvenes' 
+    ELSE 'Niños' 
+END AS CLASIFICACION_EDAD
+FROM tabla_de_clientes;
+```
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que fue visto en los videos para poder continuar con la siguiente aula.
+
+1. De nuevo en Workbench, vamos a ver formas diferentes de exhibir los resultados. Digita:
+
+```sql
+SELECT ENVASE, TAMANO FROM tabla_de_productos;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/15.png)
+
+Observa que tenemos registros donde el conjunto ENVASE / TAMAÑO se repite.
+
+2. Ahora digita el comando:
+
+```sql
+SELECT DISTINCT ENVASE, TAMANO FROM tabla_de_productos;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/16.png)
+
+El simple hecho de incluir la cláusula DISTINCT hace que los registros no se repitan.
+
+3. Podemos aplicar filtros a la selección con DISTINCT e incluso añadir más campos.
+
+```sql
+SELECT DISTINCT ENVASE, TAMANO, SABOR FROM tabla_de_productos
+WHERE SABOR = 'Naranja';
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/17.png)
+
+4. Podemos limitar el número de registros exibidos en el *output*. Digita:
+
+```sql
+SELECT * FROM tabla_de_productos LIMIT 5;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/18.png)
+
+El *output* está limitado a los primeros 5 registros.
+
+5. Podemos exhibir los registros dentro de un intervalo de filas. Digita:
+
+```sql
+SELECT * FROM tabla_de_productos LIMIT 5,4;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/19.png)
+
+6. El output de un comando SELECT puede ser presentado de forma ordenada. Observa:
+
+```sql
+SELECT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/20.png)
+
+Tenemos los valores ordenados por precio de lista, de menor a mayor.
+
+7. Podemos cambiar este orden. Digita:
+
+```sql
+SELECT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA DESC;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/21.png)
+
+8. Los valores pueden ser ordenados alfabéticamente cuando incluimos un campo de texto en el criterio de ordenamiento. Digita:
+
+```sql
+SELECT * FROM tabla_de_productos ORDER BY NOMBRE_DEL_PRODUCTO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/22.png)
+
+9. También, en el criterio de ordenamiento del tipo texto, podemos cambiar el orden de mayor a menor. Digita:
+
+```sql
+SELECT * FROM tabla_de_productos ORDER BY NOMBRE_DEL_PRODUCTO DESC;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/23.png)
+
+10. El criterio de ordenamiento puede ser diferente para cada tipo. Observa el ejemplo a continuación donde usamos dos campos como criterio de ordenamiento y un orden diferente para cada uno de ellos:
+
+```sql
+SELECT * FROM tabla_de_productos ORDER BY ENVASE DESC, NOMBRE_DEL_PRODUCTO ASC;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/24.png)
+
+11. Los datos pueden ser agrupados. Cuando esto sucede, tenemos que aplicar um criterio de agrupamiento para los campos numéricos. Podemos emplear SUM, AVG, MAX, MIN, entre otros. Digita el comando siguiente:
+
+```sql
+SELECT ESTADO, LIMITE_DE_CREDITO FROM tabla_de_clientes;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/25.png)
+
+Puedes notar que tenemos varias líneas para EM y JC. ¿Cómo hacemos para sumar todos los límites de crédito para EM y JC?
+
+12. La solución está en el siguiente comando:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes GROUP BY ESTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/26.png)
+
+13. Podemos emplear otros criterios como el valor máximo.
+
+```sql
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS MAYOR_PRECIO 
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/27.png)
+
+Aquí vemos el mayor precio de lista para cada tipo de envase.
+
+14. El comando COUNT cuenta el número de ocurrencias en la tabla. Digita:
+
+```sql
+SELECT ENVASE, COUNT(*) FROM tabla_de_productos 
+GROUP BY ENVASE;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/28.png)
+
+Tenemos el número de productos cuyo envase es botella PET, botella de vidrio y Lata.
+
+15. El filtro puede ser aplicado sobre el agrupamiento, como una consulta cualquiera. Digita: 
+
+```sql
+SELECT BARRIO, SUM(LIMITE_DE_CREDITO) AS LIMITE 
+FROM tabla_de_clientes GROUP BY BARRIO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/29.png)
+
+16. Adicionalmente, el agrupamiento puede ser realizado en más de un campo. Digita:
+
+```sql
+SELECT ESTADO, BARRIO, MAX(LIMITE_DE_CREDITO) AS LIMITE 
+FROM tabla_de_clientes GROUP BY ESTADO, BARRIO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/30.png)
+
+17.Podemos mezclar agrupamiento com ordenamiento. Digita:
+
+```sql
+SELECT ESTADO, BARRIO, MAX(LIMITE_DE_CREDITO) AS LIMITE,
+EDAD FROM tabla_de_clientes 
+WHERE EDAD >=20
+GROUP BY ESTADO, BARRIO
+ORDER BY EDAD;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/31.png)
+
+18. Observa la consulta a continuación:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes GROUP BY ESTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/32.png)
+
+19. Queremos aplicar un filtro sobre el resultado de esta consulta. Entonces, digita:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes WHERE LIMITE_TOTAL > 300000
+GROUP BY ESTADO;
+```
+Nota que la consulta anterior generó un error.
+
+20. Usamos el comando HAVING para filtrar el *output* de una consulta usando como criterio el valor agrupado. Digita:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes 
+GROUP BY ESTADO
+HAVING LIMITE_TOTAL > 300000;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/33.png)
+
+21. El criterio usado con el comando HAVING no necesita ser el mismo usado en el filtro. Observa el siguiente comando:
+
+```sql
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO,
+MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO 
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/34.png)
+
+Utiliza el MIN para agrupamiento.
+
+22) Pero, en la siguiente consulta, el criterio del comando HAVING pide la suma. Digita:
+
+```sql
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO,
+MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO 
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/35.png)
+
+23. Al utilizar HAVING podemos usar más de un criterio empleando AND u OR.
+```sql
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO,
+MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO,
+SUM(PRECIO_DE_LISTA) AS SUMA_PRECIO
+FROM tabla_de_productos GROUP BY ENVASE
+HAVING SUM(PRECIO_DE_LISTA) >= 80 
+AND MAX(PRECIO_DE_LISTA) >= 5;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/36.png)
+
+24. El comando CASE permite la clasificación de cada registro de la tabla. Digita el comando siguiente:
+
+```sql
+SELECT NOMBRE_DEL_PRODUCTO, PRECIO_DE_LISTA,
+CASE
+   WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+   WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+   ELSE 'Barato'
+END AS PRECIO
+FROM tabla_de_productos;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/37.png)
+
+Con CASE fue posible clasificar los productos como Costoso, Barato o Asequible conforme al valor de su precio de lista.
+
+25. Podemos usar el comando CASE como criterio de agrupamiento, Digita el siguiente comando:
+
+```sql
+SELECT ENVASE, SABOR,
+CASE
+   WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+   WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+   ELSE 'Barato'
+END AS PRECIO, MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO
+FROM tabla_de_productos
+WHERE TAMANO = '700 ml'
+GROUP BY ENVASE,
+CASE
+   WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+   WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+   ELSE 'Barato'
+END
+ORDER BY ENVASE;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/03/38.png)
+
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- A presentar solamente filas distintas en una selección;
+- A ordenar la salida de la selección;
+- A agrupar los registros por un conjunto de campos y aplicando un criterio de agrupamiento sobre los campos numéricos (SUM, MIN, MAX, AVG, etc);
+- A utilizar el comando HAVING para aplicar un filtro utilizando los campos numéricos agrupados como condición;
+- A limitar la salida de las consultas;
+- A usar el comando CASE para clasificar un determinado campo por un criterio.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-4 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.
