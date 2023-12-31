@@ -574,3 +574,239 @@ Lo que aprendimos en esta aula:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-4 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.
+
+### Obteniendo la facturación anual
+
+Obtén la facturación anual de la empresa. Ten en cuenta que el valor financiero de las ventas consiste en multiplicar la cantidad por el precio.
+
+El comando que debemos ejecutar es el siguiente:
+
+````sql
+SELECT YEAR(FECHA_VENTA), SUM(CANTIDAD * PRECIO) AS FACTURACION
+FROM facturas F 
+INNER JOIN 
+items_facturas IFa 
+ON F.NUMERO = IFa.NUMERO
+GROUP BY YEAR(FECHA_VENTA);
+```
+
+### Relación entre HAVING y Subconsulta
+
+Cuál sería la consulta utilizando la subconsulta que sería equivalente a:
+
+```sql
+SELECT DNI, COUNT(*) FROM facturas
+WHERE YEAR(FECHA_VENTA) = 2016
+GROUP BY DNI
+HAVING COUNT(*) > 2000;
+```
+El comando que debemos ejecutar es el siguiente:
+
+```sql
+SELECT X.DNI, X.CONTADOR FROM 
+(SELECT DNI, COUNT(*) AS CONTADOR FROM facturas
+WHERE YEAR(FECHA_VENTA) = 2016
+GROUP BY DNI) X WHERE X.CONTADOR > 2000;
+```
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que fue visto en los videos para poder continuar con la siguiente aula.
+
+1. Aquí veremos cómo conectar las consultas de tablas diferentes. Esta unión se conoce como JOIN.
+
+2. Observa el contenido de dos tablas digitando los siguientes comandos:
+
+```sql
+SELECT * FROM tabla_de_vendedores;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/39.png)
+```sql
+SELECT * FROM facturas;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/40.png)
+
+3. Podemos conectar estas dos tablas por un campo en común (MATRICULA). Digita:
+
+```sql
+SELECT * FROM tabla_de_vendedores A
+INNER JOIN
+facturas B
+ON A.MATRICULA = B.MATRICULA;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/41.png)
+
+4. Podemos aplicar agrupamientos al resultado de la consulta que conecta una o más tablas:
+
+```sql
+SELECT A.NOMBRE, B.MATRICULA, COUNT(*) FROM tabla_de_vendedores A
+INNER JOIN
+facturas B
+ON A.MATRICULA = B.MATRICULA
+GROUP BY A.NOMBRE, B.MATRICULA;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/42.png)
+
+5. No siempre todos los registros pueden ser conectados. Existen otros tipos de JOIN que nos permiten identificar lo que no puede ser conectado. Observa la siguiente consulta:
+
+```sql
+SELECT count(*) FROM tabla_de_clientes;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/43.png)
+
+Ella muestra que tenemos 15 clientes.
+
+6. Vamos a realizar un JOIN con la tabla de facturas para ver cuántos clientes poseen facturas emitidas. Digita:
+
+```sql
+SELECT DISTINCT A.DNI, A.NOMBRE, B.DNI FROM tabla_de_clientes A
+INNER JOIN
+facturas B
+ON A.DNI = B.DNI;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/44.png)
+
+Si cuentas a los clientes verás que, en la consulta acima, tenemos 12 registros. Existen tres clientes que están registrados pero nunca se les emitió facturas.
+
+7. Podemos usar un LEFT JOIN. Digita:
+
+```sql
+SELECT DISTINCT A.DNI, A.NOMBRE, A.CIUDAD, B.DNI FROM tabla_de_clientes A
+LEFT JOIN
+facturas B
+ON A.DNI = B.DNI;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/45.png)
+
+El cliente que posee el DNI proveniente de la tabla de facturas con el valor nulo, es el cliente a quien nunca se le emitió facturas.
+
+8. La selección correcta sería:
+
+```sql
+SELECT DISTINCT A.DNI, A.NOMBRE, A.CIUDAD, B.DNI FROM tabla_de_clientes A
+LEFT JOIN
+facturas B
+ON A.DNI = B.DNI
+WHERE B.DNI IS NULL;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/46.png)
+
+9. Podemos juntar dos o más consultas, Desde que los campos seleccionados sean los mismos. Digita: 
+
+```sql
+SELECT DISTINCT BARRIO FROM tabla_de_clientes
+UNION
+SELECT DISTINCT BARRIO FROM tabla_de_vendedores;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/47.png)
+
+10. El comando UNION ALL no realiza la selección con un DISTINCT. Los registros se repiten si existen en ambas tablas. Digita:
+
+```sql
+SELECT DISTINCT BARRIO FROM tabla_de_clientes
+UNION ALL
+SELECT DISTINCT BARRIO FROM tabla_de_vendedores;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/48.png)
+
+Observa que Del Valle aparece dos veces, al igual que Condesa, Contadero y Oblatos. Una proveniente de la tabla de clientes y la otra proveniente de la tabla de productos.
+
+11. Podemos simular el FULL JOIN, que no es soportado por MySQL, usando el LEFT JOIN y el RIGHT JOIN con UNION. Digita:
+
+```sql
+SELECT tabla_de_clientes.NOMBRE, tabla_de_clientes.CIUDAD, tabla_de_clientes.BARRIO,
+tabla_de_vendedores.NOMBRE, VACACIONES
+FROM tabla_de_clientes
+LEFT JOIN
+tabla_de_vendedores
+ON tabla_de_clientes.BARRIO = tabla_de_vendedores.BARRIO
+UNION
+SELECT tabla_de_clientes.NOMBRE, tabla_de_clientes.CIUDAD, tabla_de_clientes.BARRIO,
+tabla_de_vendedores.NOMBRE, VACACIONES
+FROM tabla_de_clientes
+RIGHT JOIN
+tabla_de_vendedores
+ON tabla_de_clientes.BARRIO = tabla_de_vendedores.BARRIO;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/49.png)
+
+12. Las subconsultas permiten realizar selecciones usando como criterios otras selecciones. Digita:
+
+```sql
+SELECT * FROM tabla_de_clientes
+WHERE BARRIO IN (SELECT DISTINCT BARRIO FROM tabla_de_vendedores);
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/50.png)
+
+13. Podemos aplicar una consulta sobre otra consulta directamente. Digita:
+
+```sql
+SELECT X.ENVASE, X.PRECIO_MAXIMO FROM
+(SELECT ENVASE, MAX(PRECIO_DE_LISTA) 
+AS PRECIO_MAXIMO FROM tabla_de_productos GROUP BY ENVASE) X
+WHERE X.PRECIO_MAXIMO >=10;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/51.png)
+
+14. Podemos transformar una consulta en una vista (View) que después puede ser usada en otras consultas como una tabla. Crea la vista. Para ello, expande el árbol de la esquina superior izquierda, donde tenemos el nombre de la base, y vaya a `Views`.
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/52.png)
+
+15. Haz clic con el botón derecho del mouse y selecciona la opción `Create View…`.
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/53.png)
+
+16. Digita el siguiente comando:
+
+```sql
+CREATE VIEW ‘vw_envases_grandes’
+AS SELECT ENVASE, MAX(PRECIO_DE_LISTA) 
+AS PRECIO_MAXIMO FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+17. Haz clic en Apply y sigue los pasos hasta crear la vista.
+
+18. Podemos manipular la vista como una tabla. Digita:
+
+```sql
+SELECT X.ENVASE, X. PRECIO_MAXIMO FROM
+vw_envases_grandes X 
+WHERE PRECIO_MAXIMO >=10;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/54.png)
+
+19. Podemos crear JOINs de tablas con views:
+
+```sql
+SELECT A.NOMBRE_DEL_PRODUCTO, A.ENVASE, A.PRECIO_DE_LISTA, 
+B.PRECIO_MAXIMO FROM tabla_de_productos A
+INNER JOIN
+vw_envases_grandes B
+ON A.ENVASE = B.ENVASE;
+```
+
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/04/55.png)
+
+
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- A conectar dos o más tablas a través de comandos de JOIN;
+- Los tipos de JOIN existentes y cuáles son soportados por MySQL;
+- Los comandos UNION y UNION ALL, para unir dos o más selecciones siempre y cuando tengan los mismos campos seleccionados;
+- A utilizar una consulta como criterio de filtro de otra consulta;
+- A utilizar una consulta dentro de otra consulta;
+- A Crear y utilizar vistas (Views).
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-5 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-5.zip "aquí") para descargarlos directamente.
