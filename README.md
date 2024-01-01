@@ -810,3 +810,5 @@ Lo que aprendimos en esta aula:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-5 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-5.zip "aquí") para descargarlos directamente.
+
+743
