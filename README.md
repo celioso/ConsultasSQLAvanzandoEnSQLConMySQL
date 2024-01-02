@@ -811,4 +811,13 @@ Lo que aprendimos en esta aula:
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-5 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-5.zip "aquí") para descargarlos directamente.
 
-743
+### Listando la dirección completa
+
+Haz una consulta listando el nombre del cliente y la dirección completa (Con calle, barrio, ciudad y estado).
+
+El comando que debes ejecutar es el siguiente:
+
+```sql
+SELECT NOMBRE, CONCAT(DIRECCION_1, ' ', BARRIO, ' ', CIUDAD, ' ', ESTADO) AS COMPLETO FROM tabla_de_clientes;
+```
+

@@ -1,0 +1,1 @@
+SELECT LTRIM("    MySQL es fácil ");
