@@ -1,0 +1,6 @@
+SELECT CURRENT_TIMESTAMP() AS RESULLTADO;
+
+SELECT CONCAT("La fecha y la hora de hoy son: ", CURRENT_TIMESTAMP()) AS RESULTADO;
+
+SELECT CONCAT("La fecha y el horario son: ", 
+DATE_FORMAT(CURRENT_TIMESTAMP(), " %W, %d/%M/%Y a las %T")) AS RESULTADO;

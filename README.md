@@ -821,3 +821,229 @@ El comando que debes ejecutar es el siguiente:
 SELECT NOMBRE, CONCAT(DIRECCION_1, ' ', BARRIO, ' ', CIUDAD, ' ', ESTADO) AS COMPLETO FROM tabla_de_clientes;
 ```
 
+### Formato de facturación
+
+En la tabla de facturas tenemos el valor del impuesto. En la tabla de ítems tenemos la cantidad y la facturación. Calcula el valor del impuesto pago en el año de 2016 redondeando al menor entero.
+
+El comando que debes ejecutar es el siguiente:
+
+```sql
+SELECT YEAR(FECHA_VENTA), FLOOR(SUM(IMPUESTO * (CANTIDAD * PRECIO))) 
+AS RESULTADO
+FROM facturas F
+INNER JOIN items_facturas IFa ON F.NUMERO = IFa.NUMERO
+WHERE YEAR(FECHA_VENTA) = 2016
+GROUP BY YEAR(FECHA_VENTA);
+```
+
+### Listando con expresión natural
+
+Queremos construir un SQL cuyo resultado sea, para cada cliente:
+
+“El cliente Pepito Pérez facturó 120000 en el año 2016”.
+
+Solamente para el año 2016.
+
+El comando que debes ejecutar es el siguiente:
+
+```SQL
+SELECT CONCAT('El cliente ', TC.NOMBRE, ' facturó ', 
+CONVERT(SUM(IFa.CANTIDAD * IFa.precio), CHAR(20))
+ , ' en el año ', CONVERT(YEAR(F.FECHA_VENTA), CHAR(20))) AS FRASE FROM facturas F
+INNER JOIN items_facturas IFa ON F.NUMERO = IFa.NUMERO
+INNER JOIN tabla_de_clientes TC ON F.DNI = TC.DNI
+WHERE YEAR(FECHA_VENTA) = 2016
+GROUP BY TC.NOMBRE, YEAR(FECHA_VENTA);
+```
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que fue visto en los videos para poder continuar con la siguiente aula.
+
+1. En esta aula veremos ejemplos de funciones.
+
+2. Primero vimos las funciones de tipo texto. Observa algunos ejemplos con sus respectivos outputs:
+
+````SQL
+SELECT LTRIM("    MySQL es fácil") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/56.png)
+
+````SQL
+SELECT RTRIM("MySQL es fácil    ") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/57.png)
+
+````SQL
+SELECT TRIM("    MySQL es fácil    ") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/58.png)
+````SQL
+SELECT CONCAT("MySQL es fácil,", " no lo crees?") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/59.png)
+
+````SQL
+SELECT UPPER("mysql es una base de datos interesante.") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/60.png)
+
+````SQL
+SELECT LOWER("MYSQL ES UNA BASE DE DATOS INTERESANTE.") AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/61.png)
+````SQL
+SELECT SUBSTRING("mysql es una base de datos interesante.", 14,4) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/62.png)
+````SQL
+SELECT CONCAT(NOMBRE, " ", DNI) AS RESULTADO FROM tabla_de_clientes;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/63.png)
+
+3. Tenemos las funciones de fechas. Ejecuta los siguientes comandos:
+
+````SQL
+SELECT CURDATE();
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/64.png)
+
+````SQL
+SELECT CURRENT_TIMESTAMP();
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/65.png)
+
+````SQL
+SELECT YEAR(CURRENT_TIMESTAMP());
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/66.png)
+
+````SQL
+SELECT MONTH(CURRENT_TIMESTAMP());
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/67.png)
+
+````SQL
+SELECT DAY(CURRENT_TIMESTAMP());
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/68.png)
+
+````SQL
+SELECT MONTHNAME(CURRENT_TIMESTAMP());
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/69.png)
+
+````SQL
+SELECT DAYNAME(CURRENT_TIMESTAMP());
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/70.png)
+
+````SQL
+SELECT DATEDIFF(CURRENT_TIMESTAMP(), '2021-01-01') AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/71.png)
+
+````SQL
+SELECT DATEDIFF(CURRENT_TIMESTAMP(), '1984-06-20') AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/72.png)
+
+````SQL
+SELECT current_timestamp() AS DIA_HOY, 
+DATE_SUB(current_timestamp(), INTERVAL 1 MONTH) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/73.png)
+
+````SQL
+SELECT DISTINCT FECHA_VENTA,
+DAYNAME(FECHA_VENTA) AS DIA, MONTHNAME(FECHA_VENTA) AS MES, 
+YEAR(FECHA_VENTA) AS AÑO FROM facturas;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/74.png)
+
+4. Tenemos algunos ejemplos de funciones matemáticas:
+````SQL
+SELECT (34+346-67)/15 * 29 AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/75.png)
+
+````SQL
+SELECT CEILING (23.1222);
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/76.png)
+
+````SQL
+SELECT FLOOR (23.999999);
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/77.png)
+
+````SQL
+SELECT RAND() AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/78.png)
+
+````SQL
+SELECT ROUND(254.545,2);
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/79.png)
+
+````SQL
+SELECT ROUND(254.545,1);
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/80.png)
+
+````SQL
+SELECT NUMERO, CANTIDAD, PRECIO, 
+CANTIDAD * PRECIO AS FACTURACIÓN FROM items_facturas;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/81.png)
+
+````SQL
+SELECT NUMERO, CANTIDAD, PRECIO, 
+ROUND(CANTIDAD * PRECIO,2) AS FACTURACIÓN FROM items_facturas;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/82.png)
+
+5. Tenemos también funciones de conversión. Ejecuta los siguientes ejemplos:
+
+````SQL
+SELECT CURRENT_TIMESTAMP() AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/83.png)
+````SQL
+SELECT CONCAT("La fecha y la hora de hoy son: ", CURRENT_TIMESTAMP()) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/84.png)
+
+````SQL
+SELECT CONCAT("La fecha y el horario son: ",
+DATE_FORMAT(CURRENT_TIMESTAMP(),"%W, %d/%m/%Y a las %T" )) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/85.png)
+
+````SQL
+SELECT CONVERT(23.45, CHAR) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/86.png)
+
+````SQL
+SELECT SUBSTRING(CONVERT(23.45, CHAR),3,1) AS RESULTADO;
+```
+![](https://caelum-online-public.s3.amazonaws.com/1827-design-portifolio/05/87.png)
+
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- Algunas funciones de tipo STRING para texto;
+- Funciones matemáticas;
+- Funciones de tipo DATE para fechas;
+- Abordamos funciones de conversión.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/tree/aula-6 "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1827-consultas-sql-avanzando-en-sql-con-my-sql/archive/refs/heads/aula-6.zip "aquí") para descargarlos directamente.
+
+
